@@ -1,8 +1,11 @@
-tweetiit
+Tweetiit
 ========
 
-a basic twitter like app
+<h1>a basic twitter like app</h1>
+<br>
+<h2>
 Time Spent: 15 hours 
+</h2>
 <ul>
 <li>User can sign in using OAuth login flow</li>
 <li>User can view last 20 tweets from their home timeline</li>
