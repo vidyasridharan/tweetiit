@@ -7,7 +7,8 @@
 //
 
 import UIKit
-var _currentTweet: Tweet?
+
+var _currentTweet:Tweet?
 let  currentTweetKey = "kCurrenttweetKey"
 class Tweet: NSObject {
     var user: User?
@@ -44,7 +45,7 @@ class Tweet: NSObject {
         return tweets[index]
     }
 //    
-//    class var currentTweet: Tweet? {
+   class var currentTweet: Tweet? {
 //        get{
 //            _currentTweet = Tweet(tweet as? Dictionary)
 //        if _currentTweet == nil{
@@ -59,8 +60,9 @@ class Tweet: NSObject {
 //        }
 //            return _currentTweet
 //        }
-//        
-//    }
+//
+        return _currentTweet
+    }
 
     
     

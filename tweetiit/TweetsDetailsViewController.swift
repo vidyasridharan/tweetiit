@@ -10,6 +10,7 @@ import UIKit
 
 class TweetsDetailsViewController: UIViewController {
 
+    
     @IBOutlet weak var replyButton: UIButton!
     @IBOutlet weak var retweetButton: UIButton!
     @IBOutlet weak var favoriteButton: UIButton!
@@ -21,12 +22,13 @@ class TweetsDetailsViewController: UIViewController {
     var posterUrl = ""
     var index = 0
     var id_str = ""
+   
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         self.posterImage.setImageWithURL(NSURL(string: posterUrl))
-        UIView.transitionWithView(posterImage, duration: 0.9, options:UIViewAnimationOptions.CurveEaseOut , animations:{self.posterImage.alpha = 1}, completion: nil)
+        UIView.transitionWithView(posterImage, duration: 0.4, options:UIViewAnimationOptions.CurveEaseOut , animations:{self.posterImage.alpha = 1}, completion: nil)
          var defaults = NSUserDefaults.standardUserDefaults()
         let text = defaults.objectForKey("tweeter\(self.index)") as String!
         screenName.text = "@\(text)"
