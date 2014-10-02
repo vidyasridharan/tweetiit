@@ -24,6 +24,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "loadTweets", forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
+        tableView.rowHeight  = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 114
         self.loadTweets()
 
     }
@@ -69,8 +71,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     
     
     @IBAction func onCompose(sender: AnyObject) {
-        
-        self.performSegueWithIdentifier("composeSegue", sender: self)
+                self.performSegueWithIdentifier("composeSegue", sender: self)
     }
    
     // MARK: - Navigation
@@ -80,19 +81,17 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     
-        
+        if(segue.identifier == "composeSegue"){
+            var defaults = NSUserDefaults.standardUserDefaults()
+            defaults.setBool(true, forKey: "compose")
+            println("here")
+
+        }
         
          if(segue.identifier == "tweetSegue"){
          var vc = segue.destinationViewController as TweetsDetailsViewController
-           
-            var defaults = NSUserDefaults.standardUserDefaults()
             
-            var index = tableView.indexPathForSelectedRow()!.row
-            
-            let posterUrlplaceholder = defaults.objectForKey("tweeter_image\(index)") as String!
-            println("\(posterUrlplaceholder)")
-            vc.index =  index
-            vc.posterUrl = posterUrlplaceholder
+            vc.tweet = self.tweets![tableView.indexPathForSelectedRow()!.row] as Tweet
             
         }
 

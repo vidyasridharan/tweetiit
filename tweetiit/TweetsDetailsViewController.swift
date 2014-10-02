@@ -17,26 +17,32 @@ class TweetsDetailsViewController: UIViewController {
     @IBOutlet weak var posterImage: UIImageView!
     @IBOutlet weak var fullName: UILabel!
     @IBOutlet weak var screenName: UILabel!
-    @IBOutlet weak var Tweet: UILabel!
+    
+    @IBOutlet weak var tweetContent: UILabel!
     @IBOutlet weak var TimeStamp: UILabel!
+    var tweet :Tweet?
+    
     var posterUrl = ""
-    var index = 0
-    var id_str = ""
    
+    var id_str = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.posterImage.setImageWithURL(NSURL(string: posterUrl))
+        
         UIView.transitionWithView(posterImage, duration: 0.4, options:UIViewAnimationOptions.CurveEaseOut , animations:{self.posterImage.alpha = 1}, completion: nil)
-         var defaults = NSUserDefaults.standardUserDefaults()
-        let text = defaults.objectForKey("tweeter\(self.index)") as String!
-        screenName.text = "@\(text)"
-        let name = defaults.objectForKey("tweeter_name\(self.index)") as String!
-        fullName.text = name
-        Tweet.text = defaults.objectForKey("tweet\(self.index)") as String!
-        TimeStamp.text = defaults.objectForKey("tweeter_time\(self.index)") as String!
-        id_str = defaults.objectForKey("id_str\(index)") as String!
+       
+        screenName.text = "@\(self.tweet?.user?.screenname)"
+        
+        fullName.text = self.tweet?.user?.name
+        tweetContent.text = self.tweet?.text
+        TimeStamp.text = self.tweet?.createdAtString
+        posterUrl = self.tweet?.user?.profileImageUrl as String!
+        self.posterImage.setImageWithURL(NSURL(string: self.tweet?.user?.profileImageUrl as String!))
+        if(self.tweet?.id_str != nil){
+            self.id_str = self.tweet?.id_str as String!
+        }
         var layer:CALayer =  self.posterImage.layer
         layer.masksToBounds = true
         layer.cornerRadius = 7.0
@@ -67,10 +73,10 @@ class TweetsDetailsViewController: UIViewController {
     
     @IBAction func onReply(sender: AnyObject) {
         var defaults = NSUserDefaults.standardUserDefaults()
-        let text = defaults.objectForKey("tweeter\(self.index)") as String!
-        defaults.setObject("@\(text)", forKey: "replyTo")
-        defaults.setObject(id_str, forKey: "id")
-        println(id_str)
+//        let text = defaults.objectForKey("tweeter\(self.index)") as String!
+//        defaults.setObject("@\(text)", forKey: "replyTo")
+//        defaults.setObject(id_str, forKey: "id")
+//        println(id_str)
        
         defaults.setBool(false, forKey: "compose")
         println("here")

@@ -27,7 +27,7 @@ class ComposeViewController: UIViewController {
         let text = defaults.objectForKey("replyTo") as String!
         println("print:\(text)")
         
-        let compose = defaults.boolForKey("compose") ?? true
+        var compose = defaults.boolForKey("compose") ?? true
         self.profileImage.setImageWithURL(NSURL(string: urlprofile))
         self.Name.text = User.currentUser?.name! as String!
         // Do any additional setup after loading the view.
@@ -41,6 +41,10 @@ class ComposeViewController: UIViewController {
         if(!compose){
           self.tweetText.text = "\(text)"
      
+        }
+        else{
+            println("reached")
+            self.tweetText.text = ""
         }
         
     }
