@@ -42,6 +42,24 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         
     }
     
+    func userTimelineWithParameters(user_id: String, completion: (tweets: [Tweet]?, error: NSError?)->()){
+        var params = ["screen_name" : user_id]
+        GET("1.1/statuses/user_timeline.json", parameters: params, success: {(operation: AFHTTPRequestOperation!, response: AnyObject!)-> Void in
+            println("user timeline\(response)")
+            var tweets = Tweet.tweetsWithArray(response as [NSDictionary])
+            println("got tweets\(tweets[0].user?.name)")
+            completion(tweets: tweets, error:nil)
+            
+            }, failure: {(operation: AFHTTPRequestOperation!, error: NSError!)-> Void in
+                println("error getting home timeline")
+                completion(tweets: nil, error:error)
+                
+        })
+        
+        
+    }
+
+    
     func updatewithStatus(test: String, tweetid: String, completion: (tweets: [Tweet]?, error: NSError?)->()){
         var params = ["status": test]
        

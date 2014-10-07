@@ -11,13 +11,21 @@ import UIKit
 class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     var refreshControl: UIRefreshControl!
     var tweets: [Tweet]?
-    
+    var panStartCoordinate: CGPoint!
+    var direction = ""
+    var profileViewController: UIViewController!
+    var  menuViewController: UIViewController!
     
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var containerView: UITableView!
+    @IBOutlet var panGestureRecognizer: UIPanGestureRecognizer!
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        var storyboard = UIStoryboard(name:"Main", bundle: nil)
+        menuViewController = storyboard.instantiateViewControllerWithIdentifier("MenuViewController") as UIViewController
+        profileViewController   = storyboard.instantiateViewControllerWithIdentifier("ProfileViewController") as UIViewController
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
@@ -26,6 +34,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.insertSubview(refreshControl, atIndex: 0)
         tableView.rowHeight  = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 114
+       
+        
         self.loadTweets()
 
     }
@@ -48,6 +58,57 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     
+    @IBAction func onProfileButton(sender: AnyObject) {
+        self.tableView.addSubview(profileViewController.view)
+    }
+   
+    @IBAction func ontimeLineButton(sender: AnyObject) {
+        self.profileViewController.view.removeFromSuperview()
+    }
+    
+    
+    
+    @IBAction func panGestureRecognizer(sender: AnyObject) {
+        var point = panGestureRecognizer.locationInView(self.view)
+        
+        if(panGestureRecognizer.state == UIGestureRecognizerState.Began){
+            panStartCoordinate = point
+            println("began")
+        }
+        else if (panGestureRecognizer.state == UIGestureRecognizerState.Changed){
+            var distance = point.x - panStartCoordinate.x
+            if(distance > 0){
+                direction = "R"
+            }
+            else{
+                direction = "L"
+                distance = 0
+            }
+            
+            println("changed")
+            
+            
+        }
+        else if (panGestureRecognizer.state == UIGestureRecognizerState.Ended ){
+            
+            if(direction == "R"){
+                
+                UIView .animateWithDuration(0.5, delay: 0, options: (UIViewAnimationOptions.BeginFromCurrentState | UIViewAnimationOptions.CurveEaseIn), animations: {
+                        var frame = CGRectMake(80, 60, self.view.frame.width, self.view.frame.height)
+                        self.tableView.frame = frame
+                    }, completion: nil)
+            }else{
+                UIView .animateWithDuration(0.5, delay: 0, options: (UIViewAnimationOptions.BeginFromCurrentState | UIViewAnimationOptions.CurveEaseIn), animations: {
+                    var frame = CGRectMake(0, 60, self.view.frame.width, self.view.frame.height)
+                    self.tableView.frame = frame
+                    }, completion: nil)
+            }
+            println("ended")
+        }
+
+        
+        
+    }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCellWithIdentifier("twitterCell") as TweetCellViewCell
         cell.cellContent.text = self.tweets?[indexPath.row].text as String!
@@ -58,7 +119,9 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
  
-    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+    }
     
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -69,7 +132,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         return 0
     }
     
-    
+
     @IBAction func onCompose(sender: AnyObject) {
                 self.performSegueWithIdentifier("composeSegue", sender: self)
     }
@@ -84,8 +147,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         if(segue.identifier == "composeSegue"){
             var defaults = NSUserDefaults.standardUserDefaults()
             defaults.setBool(true, forKey: "compose")
-            println("here")
-
+           
         }
         
          if(segue.identifier == "tweetSegue"){
