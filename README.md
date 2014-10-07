@@ -21,4 +21,4 @@ Time Spent: 15 hours
 <li>Tapping on a user image should bring up that user's profile page</li>
 <br><br>
 ![Video Walkthrough](tweet.gif)
-![Video Walkthrough](bloggif_542a46039681b.gif)
+
